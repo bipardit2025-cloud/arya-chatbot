@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BICTU — Bihar Institute of Public Administration & Rural Development</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Outfit:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #0a1726;
+      color: #cdd9e8;
+      min-height: 100vh
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(10, 23, 38, .85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 184, 196, .2);
+      z-index: 50
+    }
+
+    .brand {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #fff;
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #1f6feb, #00b8c4);
+      display: grid;
+      place-items: center
+    }
+
+    .host {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 120px 24px 60px
+    }
+
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 38px;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 14px
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #1f6feb, #00b8c4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    .hindi {
+      color: #7fa8c9;
+      font-size: 18px;
+      margin-bottom: 28px
+    }
+
+    p {
+      color: #8fa3ba;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      max-width: 620px
+    }
+
+    .card {
+      background: #0f2238;
+      border: 1px solid rgba(0, 184, 196, .2);
+      border-left: 3px solid #00b8c4;
+      padding: 22px;
+      margin-top: 30px;
+      max-width: 620px
+    }
+
+    .card b {
+      color: #fff
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="brand">
+      <div class="logo">🏛️</div> BICTU
+    </div>
+    <div style="font-size:13px;color:#7fa8c9">Bihar · Public Administration & Rural Development</div>
+  </nav>
+  <div class="host">
+    <h1>Welcome to <span>BICTU</span></h1>
+    <div class="hindi">बिहार लोक प्रशासन एवं ग्रामीण विकास संस्थान</div>
+    <p>Bihar Institute of Public Administration & Rural Development. This is a demo host page — the Arya AI assistant
+      floats in the bottom-right corner. Click it to start chatting in English, Hindi, or Hinglish.</p>
+    <div class="card"><b>🤖 Meet Arya:</b>
+      <p style="margin-top:8px;margin-bottom:0">Your AI guide. Click the assistant button at the bottom-right to ask
+        questions. You can also maximize it to a full page.</p>
+    </div>
+  </div>
+  <script src="widget.js?v=1.0.2"></script>
+</body>
+
+</html>

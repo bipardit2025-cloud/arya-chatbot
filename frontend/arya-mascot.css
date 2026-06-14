@@ -1,0 +1,623 @@
+/*
+ * arya-mascot.css
+ * ───────────────
+ * Pure-CSS robot mascot for Arya — no images, no SVG files needed.
+ * The mascot is built entirely from div elements styled with CSS.
+ *
+ * States:
+ *   (default)         → idle bob animation
+ *   .arya-talking     → faster head shake + antenna pulse
+ *   .arya-blinking    → blink eyes (toggled by JS at random intervals)
+ *
+ * Usage:
+ *   JS creates <div class="arya-mascot-wrap"> containing the structure,
+ *   then adds/removes .arya-talking as needed.
+ */
+
+/* ── Google Fonts import (handled by widget.js, not here) ── */
+
+/* ===================================================================
+   KEYFRAME ANIMATIONS
+   =================================================================== */
+
+/* Gentle idle bob — mascot floats up/down */
+@keyframes arya-idle-bob {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateY(-4px) rotate(1deg);
+  }
+}
+
+/* Talking head shake — subtle side-to-side while generating */
+@keyframes arya-talk-shake {
+
+  0%,
+  100% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+
+  33% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+
+  66% {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+}
+
+/* Eye blink — scaleY to zero and back */
+@keyframes arya-blink {
+
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  95% {
+    transform: scaleY(0.05);
+  }
+}
+
+/* Antenna tip glow pulse */
+@keyframes arya-antenna-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px 2px #f6c453;
+    opacity: 1;
+  }
+
+  50% {
+    box-shadow: 0 0 12px 6px #f6c453;
+    opacity: 0.7;
+  }
+}
+
+/* Talking antenna faster pulse */
+@keyframes arya-antenna-talk {
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px 3px #e23744;
+    opacity: 1;
+    background: #e23744;
+  }
+
+  50% {
+    box-shadow: 0 0 16px 8px #f6c453;
+    opacity: 0.8;
+    background: #f6c453;
+  }
+}
+
+/* Speech bubble bob (collapsed state) */
+@keyframes arya-bubble-bob {
+
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+/* Panel open animation */
+@keyframes arya-panel-open {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Typing dot bounce */
+@keyframes arya-typing-dot {
+
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  40% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+/* Message slide-in */
+@keyframes arya-msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================================================================
+   MASCOT STRUCTURE
+   Rendered HTML structure expected (created by widget.js):
+
+   <div class="arya-mascot-wrap [arya-talking]">
+     <div class="arya-mascot">
+       <div class="arya-antenna-stem">
+         <div class="arya-antenna-tip"></div>
+       </div>
+       <div class="arya-head">
+         <div class="arya-visor">
+           <div class="arya-eye arya-eye-left">
+             <div class="arya-pupil"></div>
+           </div>
+           <div class="arya-eye arya-eye-right">
+             <div class="arya-pupil"></div>
+           </div>
+         </div>
+         <div class="arya-mouth"></div>
+       </div>
+       <div class="arya-neck"></div>
+       <div class="arya-body">
+         <div class="arya-chest-light"></div>
+         <div class="arya-arm arya-arm-left"></div>
+         <div class="arya-arm arya-arm-right"></div>
+       </div>
+     </div>
+     <div class="arya-name-plate">
+       <span class="arya-name">Arya</span>
+       <span class="arya-subtitle">Your AI Guide</span>
+     </div>
+   </div>
+   =================================================================== */
+
+/* Outer wrapper — centers the mascot and drives main animation */
+.arya-mascot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: arya-idle-bob 3s ease-in-out infinite;
+  will-change: transform;
+  cursor: default;
+  user-select: none;
+}
+
+/* Talking state overrides the idle bob with a livelier motion */
+.arya-mascot-wrap.arya-talking {
+  animation: arya-talk-shake 0.5s ease-in-out infinite;
+}
+
+/* ── Antenna ── */
+.arya-antenna-stem {
+  width: 4px;
+  height: 28px;
+  background: linear-gradient(to top, #b3232f, #e23744);
+  border-radius: 2px;
+  position: relative;
+  margin-bottom: -10px;
+}
+
+.arya-antenna-tip {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f6c453;
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: arya-antenna-pulse 2s ease-in-out infinite;
+}
+
+.arya-mascot-wrap.arya-talking .arya-antenna-tip {
+  animation: arya-antenna-talk 0.4s ease-in-out infinite;
+}
+
+/* ── Head ── */
+.arya-head {
+  width: 90px;
+  height: 80px;
+  background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+  border-radius: 20px;
+  border: 2.5px solid #e23744;
+  position: relative;
+  box-shadow:
+    0 4px 16px rgba(226, 55, 68, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+/* ── Visor (holds eyes) ── */
+.arya-visor {
+  width: 70px;
+  height: 30px;
+  background: linear-gradient(135deg, #0d1b2a 0%, #1a2a3a 100%);
+  border-radius: 10px;
+  border: 1.5px solid rgba(246, 196, 83, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 10px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 8px rgba(246, 196, 83, 0.15);
+}
+
+/* ── Eyes ── */
+.arya-eye {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 35% 35%, #f6c453, #e69c00);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(246, 196, 83, 0.6);
+  transform-origin: center;
+  /* Blink is applied via JS adding .arya-blinking class */
+  transition: transform 0.05s;
+}
+
+.arya-blinking .arya-eye {
+  animation: arya-blink 0.15s ease-in-out;
+}
+
+.arya-pupil {
+  width: 7px;
+  height: 7px;
+  background: #1a1a2e;
+  border-radius: 50%;
+}
+
+/* Talking makes eyes shift slightly */
+.arya-mascot-wrap.arya-talking .arya-eye {
+  box-shadow: 0 0 12px rgba(226, 55, 68, 0.8);
+}
+
+/* ── Mouth ── */
+.arya-mouth {
+  width: 36px;
+  height: 8px;
+  border-radius: 0 0 12px 12px;
+  border: 2px solid #e23744;
+  border-top: none;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Talking mouth becomes more animated (wider) */
+.arya-mascot-wrap.arya-talking .arya-mouth {
+  height: 12px;
+  border-color: #f6c453;
+  background: rgba(246, 196, 83, 0.1);
+  animation: arya-idle-bob 0.3s ease-in-out infinite alternate;
+}
+
+/* ── Neck ── */
+.arya-neck {
+  width: 20px;
+  height: 14px;
+  background: linear-gradient(to bottom, #2a2a3e, #1a1a2e);
+  border-left: 2px solid rgba(226, 55, 68, 0.5);
+  border-right: 2px solid rgba(226, 55, 68, 0.5);
+  margin: -2px auto;
+}
+
+/* ── Body ── */
+.arya-body {
+  width: 80px;
+  height: 70px;
+  background: linear-gradient(135deg, #1e1e2e 0%, #12121e 100%);
+  border-radius: 14px;
+  border: 2px solid rgba(226, 55, 68, 0.6);
+  position: relative;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Chest light ── */
+.arya-chest-light {
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, #e23744 0%, #b3232f 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(226, 55, 68, 0.7);
+  animation: arya-antenna-pulse 2.5s ease-in-out infinite;
+}
+
+.arya-mascot-wrap.arya-talking .arya-chest-light {
+  animation: arya-antenna-talk 0.4s ease-in-out infinite;
+}
+
+/* ── Arms ── */
+.arya-arm {
+  position: absolute;
+  width: 16px;
+  height: 44px;
+  background: linear-gradient(to bottom, #2a2a3e, #1a1a2e);
+  border-radius: 8px;
+  border: 1.5px solid rgba(226, 55, 68, 0.5);
+  top: 8px;
+}
+
+.arya-arm-left {
+  left: -20px;
+  transform: rotate(-8deg);
+}
+
+.arya-arm-right {
+  right: -20px;
+  transform: rotate(8deg);
+}
+
+.arya-mascot-wrap.arya-talking .arya-arm-left {
+  animation: arya-idle-bob 0.4s ease-in-out infinite alternate;
+}
+
+.arya-mascot-wrap.arya-talking .arya-arm-right {
+  animation: arya-idle-bob 0.4s ease-in-out infinite alternate-reverse;
+}
+
+/* ── Name plate ── */
+.arya-name-plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.arya-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e23744, #f6c453);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+.arya-subtitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ===================================================================
+   MODE TOGGLE
+   =================================================================== */
+.arya-mode-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.arya-mode-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+.arya-mode-btn.active {
+  background: linear-gradient(135deg, #e23744, #b3232f);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(226, 55, 68, 0.45);
+}
+
+.arya-mode-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===================================================================
+   CHAT AREA ELEMENTS
+   (also here so widget.js only needs to inject one CSS)
+   =================================================================== */
+
+/* Typing indicator */
+.arya-typing-indicator {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 14px 14px 14px 4px;
+  width: fit-content;
+  max-width: 80px;
+}
+
+.arya-typing-dot {
+  width: 7px;
+  height: 7px;
+  background: #f6c453;
+  border-radius: 50%;
+  animation: arya-typing-dot 1.2s ease-in-out infinite;
+}
+
+.arya-typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.arya-typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Message bubbles */
+.arya-message {
+  animation: arya-msg-in 0.3s ease-out;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.arya-message.user-msg {
+  flex-direction: row-reverse;
+}
+
+.arya-bubble {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.arya-message.user-msg .arya-bubble {
+  background: linear-gradient(135deg, #e23744, #b3232f);
+  color: #fff;
+  border-radius: 16px 16px 4px 16px;
+  box-shadow: 0 2px 8px rgba(226, 55, 68, 0.3);
+}
+
+.arya-message.arya-msg .arya-bubble {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 16px 16px 16px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Markdown inside arya bubbles */
+.arya-bubble strong {
+  color: #f6c453;
+}
+
+.arya-bubble code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: 'Courier New', monospace;
+}
+
+.arya-bubble ul,
+.arya-bubble ol {
+  margin: 6px 0 6px 18px;
+  padding: 0;
+}
+
+.arya-bubble li {
+  margin-bottom: 3px;
+}
+
+.arya-bubble h3 {
+  margin: 8px 0 4px;
+  color: #f6c453;
+  font-size: 0.95rem;
+}
+
+.arya-bubble h2 {
+  margin: 10px 0 6px;
+  color: #f6c453;
+  font-size: 1rem;
+}
+
+/* Mini avatar in messages */
+.arya-msg-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e23744, #b3232f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ===================================================================
+   SPEECH BUBBLE (collapsed state — next to trigger button)
+   =================================================================== */
+.arya-speech-bubble {
+  position: fixed;
+  bottom: 94px;
+  right: 88px;
+  background: #fff;
+  color: #1a1a2e;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 18px 18px 4px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: arya-bubble-bob 2s ease-in-out infinite;
+  white-space: nowrap;
+  z-index: 999998;
+  border: 2px solid #e23744;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.arya-speech-bubble.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Arrow on the speech bubble */
+.arya-speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 18px;
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: #fff transparent transparent;
+}
+
+.arya-speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  right: 16px;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: #e23744 transparent transparent;
+}
