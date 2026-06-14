@@ -191,6 +191,16 @@ def match_rule(message: str) -> Optional[str]:
     lang = detect_language(message)
     text = message.lower().strip()
 
+    # Internal welcome trigger (frontend sends "__welcome__" on first open).
+    # Returns the spoken welcome instantly without calling the LLM.
+    if text == "__welcome__":
+        welcome = {
+            "reply_en":  "Namaste. I am Arya, your IT assistant. How may I help you today?",
+            "reply_hi":  "नमस्ते। मैं आर्या हूँ, आपका IT सहायक। मैं आपकी कैसे सहायता कर सकता हूँ?",
+            "reply_hinglish": "Namaste. Main Arya hoon, aapka IT assistant. Main aapki kaise madad kar sakta hoon?"
+        }
+        return _pick(welcome, lang)
+
     # Greetings: strict — only if the whole message is basically a greeting.
     if _is_pure_greeting(text):
         greet = {

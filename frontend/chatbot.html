@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arya — BICTU AI Assistant</title>
+    <title>Arya — AI Assistant</title>
+
+    <!-- Permanent Arya mascot favicon (matches the chatbot logo) -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231f6feb'/%3E%3Crect x='5' y='8' width='14' height='10' rx='3' fill='%23fff'/%3E%3Ccircle cx='9.5' cy='13' r='1.7' fill='%231f6feb'/%3E%3Ccircle cx='14.5' cy='13' r='1.7' fill='%231f6feb'/%3E%3Crect x='11' y='3.5' width='2' height='3.5' fill='%2300d4e0'/%3E%3Ccircle cx='12' cy='3' r='1.7' fill='%2300d4e0'/%3E%3C/svg%3E" />
+
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Outfit:wght@300;400;500&display=swap"
         rel="stylesheet">
@@ -13,67 +18,64 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            border-radius: 0
         }
 
         html,
         body {
-            height: 100%
+            height: 100%;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #0f2238, #0a1726);
+            background: radial-gradient(1200px 600px at 50% -10%, #143a63, #0a1726 60%);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh
+            min-height: 100vh;
         }
 
-        /* The widget renders its own panel; here we make it fill the page nicely. */
+        /* Full-page mode: center the panel, no overlay backdrop. */
         #arya-root #arya-overlay {
             position: static !important;
             display: flex !important;
             background: transparent !important;
             align-items: center !important;
             justify-content: center !important;
-            padding: 0 !important
+            padding: 0 !important;
         }
 
         #arya-root #arya-panel {
             width: min(1100px, 96vw) !important;
             height: min(760px, 94vh) !important;
             margin: 0 !important;
-            box-shadow: 0 30px 100px -20px rgba(0, 0, 0, .6) !important
+            box-shadow: 0 30px 100px -20px rgba(0, 0, 0, .6) !important;
         }
 
         #arya-root #arya-stage {
-            width: 340px !important
+            width: 340px !important;
         }
 
-        /* Hide the floating bubble + close button on the full page */
-        #arya-root #arya-bubble {
-            display: none !important
-        }
-
-        #arya-root #arya-close {
-            display: none !important
-        }
-
+        /* Hide floating bubble + close + maximize on the full page */
+        #arya-root #arya-bubble,
+        #arya-root #arya-close,
         #arya-root #arya-max {
-            display: none !important
+            display: none !important;
         }
     </style>
 </head>
 
 <body>
-    <!-- The widget injects everything; CSS above makes it a full page. -->
     <script>
-        // Auto-open the panel on load for the full-page route.
+        // Full-page route: open the panel and trigger the voiced welcome once.
         window.addEventListener("load", function () {
             var t = setInterval(function () {
                 var ov = document.getElementById("arya-overlay");
-                if (ov) { ov.classList.add("open"); clearInterval(t); }
+                if (ov) {
+                    ov.classList.add("open");
+                    // Fire the same first-open greeting logic used by the bubble.
+                    if (window.__aryaOpen) window.__aryaOpen();
+                    clearInterval(t);
+                }
             }, 100);
         });
     </script>
